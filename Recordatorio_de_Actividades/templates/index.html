@@ -2,25 +2,168 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mis Actividades</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistama de Gestión de Tareas - Elite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container mt-5">
-    <h1 class="text-center">Recordatorio de Actividades</h1>
-    
-    <form method="POST" class="input-group mb-3">
-        {% csrf_token %}
-        <input type="text" name="tarea" class="form-control" placeholder="Escribe una nueva tarea..." required>
-        <button class="btn btn-primary" type="submit">Agregar</button>
-    </form>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: #1c1e21;
+        }
 
-    <ul class="list-group">
+        .navbar-custom {
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            padding: 15px 0;
+        }
+
+        .task-container-main {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card-shadow {
+            background: #ffffff;
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 25px;
+        }
+
+        .input-box {
+            background: #f0f2f5;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 18px;
+            transition: all 0.3s ease;
+            width: 100%;
+            outline: none;
+        }
+
+        .input-box:focus {
+            background: #ffffff;
+            border-color: #0866ff;
+            box-shadow: 0 0 0 4px rgba(8, 102, 255, 0.1);
+        }
+
+        .btn-primary-custom {
+            background-color: #0866ff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            padding: 10px 25px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #0055d4;
+            transform: scale(1.02);
+        }
+
+        .task-item-card {
+            background: #ffffff;
+            border: 1px solid #e4e6eb;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .task-item-card:hover {
+            background: #f8f9fa;
+        }
+
+        .task-text {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #050505;
+        }
+
+        .task-meta {
+            font-size: 0.85rem;
+            color: #65676b;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delete-link {
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .delete-link:hover {
+            background: #ffebe9;
+            color: #b02a37;
+        }
+
+        .empty-illustration {
+            text-align: center;
+            padding: 50px 0;
+            color: #bcc0c4;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar-custom">
+    <div class="container text-center">
+        <span class="navbar-brand mb-0 h1" style="color: #0866ff; font-weight: 800; letter-spacing: -0.5px;">
+            <i class="bi bi-check2-circle"></i> TASK MANAGER PRO
+        </span>
+    </div>
+</nav>
+
+<div class="container task-container-main">
+    <div class="card-shadow mb-4">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="d-flex gap-2">
+                <input type="text" name="tarea" class="input-box" 
+                       placeholder="¿Qué tienes planeado para hoy?" required>
+                <button class="btn btn-primary btn-primary-custom" type="submit">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="task-list">
         {% for t in tareas %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ t.nombre }}
-            <a href="/eliminar/{{ t.id }}/" class="btn btn-danger btn-sm">Eliminar</a>
-        </li>
+        <div class="task-item-card">
+            <div>
+                <div class="task-text">{{ t.nombre }}</div>
+                <div class="task-meta">
+                    <i class="bi bi-calendar3"></i> 
+                    {{ t.fecha_creacion|date:"d M, Y" }} · <i class="bi bi-clock"></i> {{ t.fecha_creacion|date:"H:i" }}
+                </div>
+            </div>
+            <a href="/eliminar/{{ t.id }}/" class="delete-link">
+                <i class="bi bi-trash3"></i> Borrar
+            </a>
+        </div>
+        {% empty %}
+        <div class="empty-illustration">
+            <i class="bi bi-clipboard-check" style="font-size: 4rem;"></i>
+            <p class="mt-3 fs-5">¡Felicidades! Has completado todas tus tareas.</p>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+
+    <footer class="text-center mt-5 mb-5">
+        <p class="text-muted small">Desarrollado para Ingeniería de Software © 2024</p>
+    </footer>
+</div>
+
 </body>
 </html>
